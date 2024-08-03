@@ -1,11 +1,42 @@
 import { MdLocationOn } from "react-icons/md";
 import { HiCalendar, HiMinus, HiPlus, HiSearch } from "react-icons/hi";
-import { useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
+import useOutSideClick from "../../hooks/useOutSideClick";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { DateRange } from "react-date-range";
+import { format } from "date-fns";
+function reducer(state, { type, payload }) {
+  switch (type) {
+    case "inc": {
+      return { ...state, [payload]: state[payload] + 1 };
+    }
+    case "dec": {
+      return { ...state, [payload]: state[payload] - 1 };
+    }
+    default:
+      throw new Error("unknown" + type);
+  }
+}
 export default function Header() {
   const [destination, setDestination] = useState("");
   const [openOption, setOpenOption] = useState(false);
-  const [options, setOptions] = useState({ adult: 1, children: 0, room: 0 });
-
+  const [openDate, setOpenDate] = useState(false);
+  const [dateSelectionRange, setDateSelectionRange] = useState([
+    { startDate: new Date(), endDate: new Date(), key: "selection" },
+  ]);
+  // const [options, setOptions] = useState({ adult: 1, children: 0, room: 1 });
+  const [option, dispatch] = useReducer(reducer, {
+    adult: 1,
+    children: 0,
+    room: 1,
+  });
+  const handleIncrement = (tatt) => {
+    dispatch({ type: "inc", payload: tatt });
+  };
+  const handleDecrement = (tatt) => {
+    dispatch({ type: "dec", payload: tatt });
+  };
   return (
     <div className="header">
       <span>Home</span>
@@ -27,21 +58,49 @@ export default function Header() {
         </div>
         <div className="headerSearchItem">
           <HiCalendar className="headerIcon dateIcon" />
-          <div className="dateDropDown">2024/29/07</div>
+          <div
+            onClick={() => {
+              setOpenDate((is) => {
+                return !is;
+              });
+            }}
+            id="dateDropDown"
+          >
+            {`${format(
+              dateSelectionRange[0].startDate,
+              "MM/dd/yyyy"
+            )} to ${format(dateSelectionRange[0].endDate, "MM/dd/yyyy")} `}
+          </div>
+          <DateOption
+            openDate={openDate}
+            dateSelectionRange={dateSelectionRange}
+            setDateSelectionRange={setDateSelectionRange}
+            setOpenDate={setOpenDate}
+          />
           <span className="seperator"></span>
         </div>
         <div className="headerSearchItem">
           <div
-            className="optionDropDown"
+            id="optionDropDown"
             onClick={() => {
               setOpenOption((is) => {
                 return !is;
               });
             }}
           >
-            1 adult &bull; 0 children &bull; 1 room
+            {option.adult} adult &bull; {option.children} children &bull;{" "}
+            {option.room} room
           </div>
-          {openOption ? <GuestOption option={options} /> : ""}
+          {openOption ? (
+            <GuestOption
+              option={option}
+              handleIncrement={handleIncrement}
+              handleDecrement={handleDecrement}
+              setOpenOption={setOpenOption}
+            />
+          ) : (
+            ""
+          )}
           <span className="seperator"></span>
         </div>
         <div className="headerSearchItem">
@@ -54,28 +113,107 @@ export default function Header() {
   );
 }
 
-function GuestOption({ option }) {
+function GuestOption({
+  option,
+  handleIncrement,
+  handleDecrement,
+  setOpenOption,
+}) {
+  const optionRef = useRef();
+  useOutSideClick(
+    optionRef,
+    () => {
+      setOpenOption(false);
+    },
+    "optionDropDown"
+  );
   return (
-    <div className="guestOptions">
-      <GuestOptionItem option={option} />
+    <div className="guestOptions" ref={optionRef}>
+      <GuestOptionItem
+        type={"adult"}
+        option={option}
+        minLimit={1}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
+      <GuestOptionItem
+        type={"children"}
+        option={option}
+        minLimit={0}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
+      <GuestOptionItem
+        type={"room"}
+        option={option}
+        minLimit={1}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
     </div>
   );
 }
 
-function GuestOptionItem({ option }) {
-  for (const item in option) {
-    console.log(item);
-  }
-  // <div className="guestOptionItem">
-  //   <span className="optionText">adult</span>
-  //   <div className="optionCounter">
-  //     <button className="optionCounterBtn">
-  //       <HiMinus />
-  //     </button>
-  //     <span className="optionCounetrNumber">0</span>
-  //     <button className="optionCounterBtn">
-  //       <HiPlus />
-  //     </button>
-  //   </div>
-  // </div>
+function GuestOptionItem({
+  option,
+  type,
+  minLimit,
+  handleIncrement,
+  handleDecrement,
+}) {
+  return (
+    <div className="guestOptionItem">
+      <span className="optionText">{type}</span>
+      <div className="optionCounter">
+        <button
+          className="optionCounterBtn"
+          disabled={option[type] <= minLimit}
+          onClick={() => {
+            handleDecrement(type);
+          }}
+        >
+          <HiMinus />
+        </button>
+        <span className="optionCounetrNumber">{option[type]}</span>
+        <button
+          onClick={() => handleIncrement(type)}
+          className="optionCounterBtn"
+        >
+          <HiPlus />
+        </button>
+      </div>
+    </div>
+  );
+}
+function DateOption({
+  openDate,
+  dateSelectionRange,
+  setDateSelectionRange,
+  setOpenDate,
+}) {
+  const dateRef = useRef();
+  useOutSideClick(
+    dateRef,
+    () => {
+      setOpenDate(false);
+    },
+    "dateDropDown"
+  );
+  return (
+    <div ref={dateRef}>
+      {openDate ? (
+        <DateRange
+          className="date"
+          ranges={dateSelectionRange}
+          onChange={(item) => {
+            return setDateSelectionRange([item.selection]);
+          }}
+          minDate={new Date()}
+          moveRangeOnFirstSelection={true}
+        />
+      ) : (
+        ""
+      )}
+    </div>
+  );
 }
