@@ -25,7 +25,10 @@ function reducer(state, { type, payload }) {
   }
 }
 export default function Header() {
-  const [destination, setDestination] = useState("");
+  const [searchParam, setSerachParam] = useSearchParams();
+  const [destination, setDestination] = useState(
+    searchParam.get("destination") || ""
+  );
   const [openOption, setOpenOption] = useState(false);
   const [openDate, setOpenDate] = useState(false);
   const navigate = useNavigate();
