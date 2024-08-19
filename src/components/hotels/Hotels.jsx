@@ -2,8 +2,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useHotels } from "../context/HotelsProvider";
 
 export default function Hotels() {
-  const { isLoading, hotels } = useHotels();
-  console.log(hotels);
+  const { isLoading, hotels, currentHotel } = useHotels();
+
   return (
     <div className="searchList">
       <h2>Search Results{hotels.length}</h2>
@@ -13,7 +13,11 @@ export default function Hotels() {
             key={item.id}
             to={`/hotels/${item.id}?lat=${item.latitude}&lng=${item.longitude}`}
           >
-            <div className="searchItem">
+            <div
+              className={`searchItem ${
+                item.id === currentHotel?.id ? "current-hotel" : ""
+              }`}
+            >
               <img src={item.medium_url} alt={item.name} />
               <div className="searchItemDesc">
                 <p className="location">{item.smart_location}</p>
