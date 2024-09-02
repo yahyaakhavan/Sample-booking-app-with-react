@@ -13,7 +13,8 @@ export default function HotelsProvider({ children }) {
 
   const { isLoading, data: hotels } = useFetch(
     Base_URL,
-    `name_like=${destination || ""}&accommodates_gte=${roomNumber}`
+    `q=${destination || ""}&accommodates_gte=${roomNumber || 1}`
+    // `name_like=${destination || ""}&accommodates_gte=${roomNumber}`
   );
   async function getCurrentHotel(id) {
     try {

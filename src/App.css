@@ -17,7 +17,26 @@
   border-radius: 1.5rem;
   padding: 1rem;
 }
-
+/* start loader */
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 30px;
+  padding: 0 5px 8px 0;
+  background: repeating-linear-gradient(90deg, currentColor 0 8%, #0000 0 10%)
+    200% 100%/200% 3px no-repeat;
+  animation: l3 2s steps(6) infinite;
+}
+.loader:before {
+  content: "Loading...";
+}
+@keyframes l3 {
+  to {
+    background-position: 80% 100%;
+  }
+}
+/* end loader */
 .headerSearchInput {
   padding: 0.7rem 0.5rem;
   font-size: 1rem;
@@ -273,6 +292,7 @@
 /* bookmark page */
 .bookmarkList {
   margin-top: 1rem;
+  width: 50%;
 }
 .bookmarkItem {
   margin-bottom: 1rem;

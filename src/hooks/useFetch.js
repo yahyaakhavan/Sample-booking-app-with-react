@@ -9,6 +9,7 @@ export default function useFetch(url, query = "") {
       try {
         setIsLoading(true);
         const { data } = await axios.get(`${url}?${query}`);
+        
         setDate(data);
       } catch (error) {
         setDate([]);

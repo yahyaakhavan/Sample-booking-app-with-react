@@ -1,9 +1,13 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useHotels } from "../context/HotelsProvider";
+import Loader from "../loader/Loader";
 
 export default function Hotels() {
   const { isLoading, hotels, currentHotel } = useHotels();
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className="searchList">
       <h2>Search Results{hotels.length}</h2>

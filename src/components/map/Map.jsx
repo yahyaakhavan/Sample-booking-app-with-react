@@ -1,16 +1,22 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvent,
+} from "react-leaflet";
 import { useHotels } from "../context/HotelsProvider";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useGeoLocation from "../../hooks/useGeoLocation";
+import useGetParams from "../../hooks/useGetParams";
 
-function Map() {
+function Map({ markerLocations }) {
   const { isLoading, hotels } = useHotels();
   const [mapCenter, setMapCenter] = useState([32.4279, 53.688]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
+  const [lat, lng] = useGetParams();
   const {
     geoLocation: geoPosition,
     isLoading: geoLoading,
@@ -25,10 +31,9 @@ function Map() {
   useEffect(() => {
     if (geoPosition?.lat && geoPosition?.lng) {
       setMapCenter([geoPosition.lat, geoPosition.lng]);
-      console.log("mi");
     }
-    console.log(geoPosition);
   }, [geoPosition]);
+
   return (
     <div className="mapContainer">
       <MapContainer
@@ -44,12 +49,16 @@ function Map() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
+        <DetectClick />
         <ChangeCenter position={mapCenter} />
-        {hotels.map((item) => (
-          <Marker key={item.id} position={[item.latitude, item.longitude]}>
-            <Popup>{item.host_location}</Popup>
-          </Marker>
-        ))}
+
+        {markerLocations.map((item) => {
+          return (
+            <Marker key={item.id} position={[item.latitude, item.longitude]}>
+              <Popup>{item.host_location}</Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );
@@ -59,5 +68,14 @@ export default Map;
 function ChangeCenter({ position }) {
   const map = useMap();
   map.setView(position);
+  return null;
+}
+
+function DetectClick() {
+  const navigate = useNavigate();
+  useMapEvent({
+    click: (e) =>
+      navigate(`/bookmark/add?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
+  });
   return null;
 }

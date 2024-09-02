@@ -1325,15 +1325,6 @@
   ],
   "bookmarks": [
     {
-      "cityName": "Abalessa",
-      "country": "Algeria",
-      "countryCode": "DZ",
-      "latitude": "23.18455079512732",
-      "longitude": "3.795523257510883",
-      "host_location": "Abalessa Algeria",
-      "id": 1
-    },
-    {
       "cityName": "Mahidasht",
       "country": "Iran (Islamic Republic of)",
       "countryCode": "IR",
@@ -1352,22 +1343,58 @@
       "id": 5
     },
     {
-      "cityName": "A Dakhla Oasis",
-      "country": "Egypt",
-      "countryCode": "EG",
-      "latitude": "25.02090651422749",
-      "longitude": "29.09059588509316",
-      "host_location": "A Dakhla Oasis Egypt",
-      "id": 7
+      "cityName": "Mashhad",
+      "country": "Iran (Islamic Republic of)",
+      "countryCode": "IR",
+      "latitude": "36.28053749728463",
+      "longitude": "59.61181640625001",
+      "host_location": "Iran (Islamic Republic of)",
+      "id": 10
     },
     {
-      "cityName": "Baba Kot",
-      "country": "Pakistan",
-      "countryCode": "PK",
-      "latitude": "28.43528783183169",
-      "longitude": "67.78003711374224",
-      "host_location": "Baba Kot Pakistan",
-      "id": 8
+      "cityName": "Sabzevar",
+      "country": "Iran (Islamic Republic of)",
+      "countryCode": "IR",
+      "latitude": "36.200789198872094",
+      "longitude": "57.71118164062501",
+      "host_location": "Iran (Islamic Republic of)",
+      "id": 11
+    },
+    {
+      "cityName": "Hamadan",
+      "country": "Iran (Islamic Republic of)",
+      "countryCode": "IR",
+      "latitude": "34.79935611106664",
+      "longitude": "48.51974487304688",
+      "host_location": "Iran (Islamic Republic of)",
+      "id": 12
+    },
+    {
+      "cityName": "Washington",
+      "country": "United States of America (the)",
+      "countryCode": "US",
+      "latitude": "38.8771359067301",
+      "longitude": "-77.01416015625001",
+      "host_location": "United States of America (the)",
+      "id": 14
+    },
+    {
+      "cityName": "Ardestan",
+      "country": "Iran (Islamic Republic of)",
+      "countryCode": "IR",
+      "latitude": "33.0305416674074",
+      "longitude": "52.62451171875001",
+      "host_location": "Iran (Islamic Republic of)",
+      "id": 16
+    },
+    {
+      "cityName": "Summerton",
+      "country": "United States of America (the)",
+      "countryCode": "US",
+      "latitude": "33.672925666287206",
+      "longitude": "-80.35400390625001",
+      "host_location": "United States of America (the)",
+      "id": 18
     }
   ]
 }
