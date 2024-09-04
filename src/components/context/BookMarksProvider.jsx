@@ -11,43 +11,46 @@ import toast from "react-hot-toast";
 
 const BookmarkContext = createContext();
 const Base_URL = "http://localhost:5000/bookmarks";
+
 const initialState = {
   bookmarks: [],
   isLoading: false,
   currentBookmark: {},
   merror: null,
 };
-export default function BookMarksProvider({ children }) {
-  function bookmarkReducer(state, action) {
-    switch (action.type) {
-      case "bookmarks/loaded":
-        return { ...state, bookmarks: action.payload, isLoading: false };
-      case "bookmark/loaded":
-        return { ...state, currentBookmark: action.payload, isLoading: false };
-      case "loading":
-        return { ...state, isLoading: true };
-      case "bookmark/create":
-        return {
-          ...state,
-          bookmarks: [...state.bookmarks, action.payload],
-          currentBookmark: action.payload,
-          isLoading: false,
-        };
-      case "bookmark/deleted":
-        return {
-          ...state,
-          bookmarks: state.bookmarks.filter((item) => {
-            return item.id != action.payload;
-          }),
-          isLoading: false,
-          currentBookmark: {},
-        };
-      case "reject":
-        return { ...state, isLoading: false, merror: action.payload };
-      default:
-        return "unknown action...!";
-    }
+
+function bookmarkReducer(state, action) {
+  switch (action.type) {
+    case "bookmarks/loaded":
+      return { ...state, bookmarks: action.payload, isLoading: false };
+    case "bookmark/loaded":
+      return { ...state, currentBookmark: action.payload, isLoading: false };
+    case "loading":
+      return { ...state, isLoading: true };
+    case "bookmark/create":
+      return {
+        ...state,
+        bookmarks: [...state.bookmarks, action.payload],
+        currentBookmark: action.payload,
+        isLoading: false,
+      };
+    case "bookmark/deleted":
+      return {
+        ...state,
+        bookmarks: state.bookmarks.filter((item) => {
+          return item.id != action.payload;
+        }),
+        isLoading: false,
+        currentBookmark: {},
+      };
+    case "reject":
+      return { ...state, isLoading: false, merror: action.payload };
+    default:
+      return "unknown action...!";
   }
+}
+
+export default function BookMarksProvider({ children }) {
   const [{ bookmarks, isLoading, currentBookmark }, dispatch] = useReducer(
     bookmarkReducer,
     initialState

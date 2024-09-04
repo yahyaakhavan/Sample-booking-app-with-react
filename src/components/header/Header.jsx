@@ -1,5 +1,11 @@
 import { MdLocationOn } from "react-icons/md";
-import { HiCalendar, HiMinus, HiPlus, HiSearch } from "react-icons/hi";
+import {
+  HiCalendar,
+  HiLogout,
+  HiMinus,
+  HiPlus,
+  HiSearch,
+} from "react-icons/hi";
 import { useReducer, useRef, useState } from "react";
 import useOutSideClick from "../../hooks/useOutSideClick";
 import "react-date-range/dist/styles.css"; // main style file
@@ -9,9 +15,11 @@ import { format } from "date-fns";
 import {
   createSearchParams,
   json,
+  Link,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 function reducer(state, { type, payload }) {
   switch (type) {
     case "inc": {
@@ -58,7 +66,7 @@ export default function Header() {
   };
   return (
     <div className="header">
-      <span>Home</span>
+      <Link to={"/bookmark"}>Bookmarks</Link>
       <div className="headerSearch">
         <div className="headerSearchItem">
           <MdLocationOn className="headerIcon locationIcon" />
@@ -128,10 +136,36 @@ export default function Header() {
           </button>
         </div>
       </div>
+      <User />
     </div>
   );
 }
-
+function User() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+  return (
+    <div>
+      {isAuthenticated ? (
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <span>{user.Name}</span>
+          <button
+            onClick={() => {
+              handleLogout();
+            }}
+          >
+            <HiLogout style={{ color: "red" }} />
+          </button>
+        </div>
+      ) : (
+        <Link to={"/login"}>login</Link>
+      )}
+    </div>
+  );
+}
 function GuestOption({
   option,
   handleIncrement,
